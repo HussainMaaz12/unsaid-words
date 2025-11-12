@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unsaid Words</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Hey Deepshikha 💖</h1>
+    <p class="subtitle">Before you go further... <br>🌙 Every click takes you closer to what I never said. <br>I just wanted to make you smile today.</p>
+    <button class="start-btn" onclick="goToNext()">Click to Begin 💫</button>
+  </div>
+
+  <div class="emoji-container"></div>
+
+  <script>
+    function goToNext() {
+      window.location.href = "puzzle.html";
+    }
+
+    const emojis = ["💖", "🌸", "🌙", "💫", "🩷"];
+    const container = document.querySelector('.emoji-container');
+
+    function createEmoji() {
+      const emoji = document.createElement('div');
+      emoji.classList.add('emoji');
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + 'vw';
+      emoji.style.fontSize = Math.random() * 24 + 20 + 'px';
+      emoji.style.animationDuration = (4 + Math.random() * 4) + 's';
+      container.appendChild(emoji);
+
+      setTimeout(() => emoji.remove(), 7000);
+    }
+
+    // Auto-scroll to content after animations
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 2500);
+    });
+
+    setInterval(createEmoji, 400);
+  </script>
+</body>
+</html>

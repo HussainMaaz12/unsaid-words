@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500&display=swap');
+
+:root {
+  --bg1: #f0557e;
+  --bg2: #ffedf3;
+  --accent: #ff4d6d; /* Deep pink */
+  --tile: #ffffffe0; /* Slightly transparent white */
+  --sparkle: #f6c43c; /* Gold for the 'me' sparkle */
+}
+
+/* --- Base & Animations --- */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  overflow: hidden; /* Changed from overflow-x: hidden */
+  position: relative;
+}
+
+body {
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* NEW: Animated wave background */
+body::before, body::after {
+  content: '';
+  position: fixed;
+  bottom: -150px; /* Start mostly off-screen */
+  left: 0;
+  width: 200%; /* Double width for seamless loop */
+  height: 200px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 45%;
+  z-index: 1; /* Below content, above gradient */
+  animation: wave 15s linear infinite;
+  opacity: 0.5;
+}
+
+body::after {
+  bottom: -170px; /* Slightly lower */
+  border-radius: 40%;
+  animation-duration: 20s;
+  animation-direction: reverse;
+  opacity: 0.3;
+}
+
+@keyframes wave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Moves left by one full width */
+}
+/* End of new wave background */
+
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- Page Container --- */
+.page {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(255, 77, 109, 0.2);
+  backdrop-filter: blur(6px);
+  text-align: center;
+  z-index: 10; /* Make sure content is above waves */
+}
+
+.page-title, .page-sub {
+  opacity: 0;
+  animation: fadeInDown 0.8s ease-out 0.2s forwards;
+}
+
+.page-sub {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.page-sub {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* --- Board --- */
+.board-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.board-container::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.4), transparent 70%);
+  border-radius: 18px;
+  z-index: -1;
+  filter: blur(12px);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 8px;
+}
+
+.square {
+  background: var(--tile);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 14px rgba(255, 77, 109, 0.12);
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  animation: stampIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  
+  position: relative; /* NEW: Needed for sparkles */
+  overflow: hidden; /* NEW: Keeps sparkles contained */
+}
+
+.square[data-value="💖"] { color: var(--accent); }
+.square[data-value="✨"] { color: var(--sparkle); }
+
+.square:not([data-value=""]):hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 20px rgba(255, 77, 109, 0.18);
+}
+
+.square.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes stampIn {
+  0% { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px) rotate(-3deg); }
+  75% { transform: translateX(6px) rotate(3deg); }
+}
+
+/* --- NEW: Sparkle Animation --- */
+.sparkle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--sparkle);
+  /* Creates a 4-point star shape */
+  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  animation: sparkleBurst 0.7s ease-out forwards;
+  z-index: 100;
+}
+
+@keyframes sparkleBurst {
+  0% {
+    transform: scale(0.5) rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8) rotate(90deg);
+    opacity: 0;
+  }
+}
+/* End of new sparkle animation */
+
+
+/* --- Modal --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+  z-index: 100;
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+  text-align: center;
+  width: min(90%, 320px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.9);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out;
+}
+
+.modal.show .modal-card {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.modal-card h3 {
+  color: var(--accent);
+  margin: 0 0 10px;
+  font-family: 'Playfair Display', serif;
+}
+.revealed {
+  font-size: 1.05rem;
+  margin-bottom: 18px;
+  font-weight: 500;
+  color: #333;
+  min-height: 40px;
+}
+
+/* Button */
+.btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 77, 109, 0.12);
+  transition: transform 0.2s ease;
+}
+.btn:hover { 
+  transform: scale(1.05);
+  animation: none;
+}
+
+.modal .btn {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 20px rgba(255, 77, 109, 0.12);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(255, 77, 109, 0.25);
+  }
+}
+
+/* --- Modal Hearts Animation --- */
+.hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hearts div {
+  position: absolute;
+  bottom: -20px;
+  left: var(--x-pos);
+  font-size: 20px;
+  color: var(--accent);
+  animation: floatUp 3.8s linear forwards;
+  opacity: 0.95;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.85); opacity: 1; }
+  100% { transform: translateY(-35vh) scale(1.15); opacity: 0; }
+}
+
+/* --- Responsive --- */
+@media (max-width: 400px) {
+  .board {
+    grid-template-columns: repeat(3, 65px);
+    grid-template-rows: repeat(3, 65px);
+  }
+  .square { font-size: 1.6rem; }
+}

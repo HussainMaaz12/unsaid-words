@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500&display=swap');
+
+:root {
+  --bg1: #ffe5ec;
+  --bg2: #fff0f5;
+  --accent: #ff4d6d;
+  --text-dark: #4e4a55;
+  --card-bg: rgba(255, 255, 255, 0.45);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  /* --- FIX: We set a MINIMUM height, not a fixed height --- */
+  min-height: 100%; 
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  
+  /* --- FIX: We align to the start, not center, to allow scrolling --- */
+  align-items: flex-start; 
+  
+  /* --- FIX: Changed padding to give consistent spacing even when scrolling --- */
+  padding: 6vh 20px; /* 6% of viewport height from top/bottom */
+  
+  position: relative;
+  
+  /* --- FIX: This is the critical change! --- */
+  overflow-x: hidden; /* ONLY hide horizontal overflow */
+  overflow-y: auto;   /* ALLOW vertical overflow (scrolling) */
+}
+
+body {
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- Interactive Glow Aura --- */
+.cursor-glow {
+  position: fixed; /* This is correct, it stays in the viewport */
+  left: -150px; 
+  top: -150px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 122, 138, 0.25) 0%, rgba(255, 122, 138, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  transition: transform 0.1s ease-out;
+  opacity: 0;
+}
+
+.glow-visible {
+  opacity: 1;
+}
+
+/* --- Page Container --- */
+.page {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px 25px 30px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(255, 77, 109, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  z-index: 10;
+}
+
+/* --- Titles --- */
+.page-title, .page-sub {
+  opacity: 0;
+  animation: fadeInDown 0.8s ease-out 0.2s forwards;
+}
+
+.page-sub {
+  animation-delay: 0.4s;
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Two-Part Reasons Container --- */
+.reasons-container {
+  text-align: left;
+  padding: 0 10px;
+  
+  /* --- FIX: Removed min-height to let it flow naturally --- */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+}
+
+/* Parent container for each reason */
+.reason {
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.reason.show {
+  opacity: 1;
+}
+
+/* Style for the Title (Part 1) */
+.reason-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--accent);
+  margin: 0 0 5px 0;
+  padding-left: 28px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+}
+
+.reason-title::before {
+  content: '💖';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  font-size: 1.1rem;
+}
+
+/* Style for the Description (Part 2) */
+.reason-desc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-dark);
+  margin: 0;
+  padding-left: 28px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s;
+}
+
+.reason.show .reason-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reason.show .reason-desc {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Button --- */
+.btn {
+  display: inline-block;
+  margin-top: 35px; /* Added more space */
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 77, 109, 0.12);
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.5s ease 0.3s;
+}
+
+.btn:hover { 
+  transform: scale(1.05);
+}
+
+.btn.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .reason-desc { font-size: 0.95rem; line-height: 1.4; }
+  .reason-title { font-size: 1.2rem; }
+  .page { padding: 20px 15px 25px; }
+}

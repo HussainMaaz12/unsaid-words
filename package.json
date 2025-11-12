@@ -1,0 +1,16 @@
+{
+  "name": "unsaid-words",
+  "version": "1.0.0",
+  "description": "Frontend site for Unsaid Words - static pages",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -c-1 . -p 3000",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "keywords": ["frontend","static","unsaid-words"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap');
+
+:root {
+  --bg-glow: radial-gradient(ellipse at bottom, #ffd1dc 0%, #ffe5ec 70%, #fff0f5 100%);
+  --accent: #ff4d6d;
+  --text-dark: #4a4650; 
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --star-gold: #fecf4f;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg-glow);
+}
+
+/* --- NEW: "EXTRA ORDINARY" GALAXY BACKGROUND --- */
+.starfield-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1; /* Below content */
+}
+
+/* This is the new 4-point star shape */
+.star {
+  position: absolute;
+  background-color: white;
+  opacity: 0;
+  /* clip-path creates the star shape */
+  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  
+  /* The new animation: drift + twinkle */
+  animation: driftAndTwinkle linear infinite;
+}
+
+@keyframes driftAndTwinkle {
+  0% {
+    transform: translateY(-20vh) rotate(0deg); /* Start above screen */
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8; /* Twinkle on */
+  }
+  80% {
+    opacity: 0.8; /* Twinkle off */
+  }
+  100% {
+    transform: translateY(120vh) rotate(360deg); /* End below screen */
+    opacity: 0;
+  }
+}
+
+/* NEW: The Shooting Star */
+.shooting-star {
+  position: fixed;
+  top: -50px; /* Start above screen */
+  left: 50%;
+  width: 2px; /* The "star" */
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px #fff, 0 0 12px 4px var(--star-gold);
+  
+  /* The "tail" */
+  transform-origin: top left;
+  animation: shoot 3s ease-in infinite;
+}
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px; /* Tail length */
+  height: 2px;
+  background: linear-gradient(to right, rgba(255,255,255,0.6), transparent);
+  transform: rotate(-30deg); /* Angle of the streak */
+  transform-origin: top left;
+}
+
+@keyframes shoot {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1; /* Appears */
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    /* Streaks across and fades */
+    transform: translate(100vw, 100vh) rotate(0deg);
+    opacity: 0;
+  }
+}
+/* --- End of New Background CSS --- */
+
+
+/* --- Page Container --- */
+.page {
+  /* ... (rest of your .page CSS is identical) ... */
+  width: 100%;
+  max-width: 500px;
+  padding: 40px 25px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(255, 77, 109, 0.2);
+  backdrop-filter: blur(12px); 
+  text-align: center;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: pageFadeIn 1s ease-out 0.5s forwards;
+}
+
+@keyframes pageFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Music Player (Identical) --- */
+.music-player {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; 
+}
+.play-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.3);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite ease-in-out;
+}
+.skip-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.play-btn:hover, .skip-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.7);
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* --- Icons (Identical) --- */
+.icon-play {
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 18px solid var(--accent);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  transition: opacity 0.2s ease;
+}
+.icon-pause {
+  width: 16px;
+  height: 18px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.icon-pause::before, .icon-pause::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 18px;
+  background: var(--accent);
+  top: 0;
+}
+.icon-pause::before { left: 0; }
+.icon-pause::after { right: 0; }
+.icon-skip-prev, .icon-skip-next {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.icon-skip-prev::before, .icon-skip-next::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+.icon-skip-prev::after, .icon-skip-next::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 12px;
+  background: var(--text-dark);
+}
+.icon-skip-prev::before { border-right: 9px solid var(--text-dark); left: 0; }
+.icon-skip-prev::after { right: 0; }
+.icon-skip-next::before { border-left: 9px solid var(--text-dark); right: 0; }
+.icon-skip-next::after { left: 0; }
+.playing .icon-play { opacity: 0; }
+.playing .icon-pause { opacity: 1; }
+.playing {
+  animation: none;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* --- Memory Image --- */
+.memory-image {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  border-radius: 15px;
+  margin: 20px 0 30px 0;
+  box-shadow: 0 8px 25px rgba(255, 77, 109, 0.15);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.memory-image.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- Message Lines (Identical) --- */
+.song-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-top: 0;
+  margin-bottom: 25px;
+  height: 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.message-container {
+  opacity: 0;
+  transition: opacity 0.5s ease 0.2s;
+}
+.message-container.show {
+  opacity: 1;
+}
+.line {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin: 15px 0;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+h2.line {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 30px 0 10px;
+}
+h3.line {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+.line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.line-1.show { transition-delay: 0.3s; }
+.line-2.show { transition-delay: 0.6s; }
+.line-3.show { transition-delay: 0.9s; }
+.line-4.show { transition-delay: 1.2s; }
+.line-5.show { transition-delay: 1.5s; }
+.line-6.show { transition-delay: 1.8s; }
+.line-7.show { transition-delay: 2.1s; }
+.line-8.show { transition-delay: 2.4s; }
+.line-9.show { transition-delay: 2.7s; }
+.line-10.show { transition-delay: 3s; }
+.line-11.show { transition-delay: 3.3s; }
+.line-12.show { transition-delay: 3.6s; }
+.line-13.show { transition-delay: 3.9s; }
+.line-14.show { transition-delay: 4.2s; }
+.line-15.show { transition-delay: 4.5s; }
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .page {
+    padding: 30px 20px;
+  }
+  .play-btn {
+    width: 60px;
+    height: 60px;
+  }
+  .skip-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+

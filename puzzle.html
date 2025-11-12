@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete the Heart — Unsaid Words</title>
+  <link rel="stylesheet" href="css/puzzle.css">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h2 class="page-title">Complete the Heart 💖</h2>
+      <p class="page-sub">Place the last X and reveal the hidden message Deepshikha Baby ✨</p>
+    </header>
+
+    <main>
+      <div class="board-container">
+        <div class="board" id="board">
+          <!-- 9 squares created by JS -->
+        </div>
+      </div>
+
+      <!-- Modal to show message on win -->
+      <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-card">
+          <h3>Congratulations! 💌</h3>
+          <p class="revealed" id="revealedText">Every word unspoken still whispers your name.</p>
+          <button id="nextBtn" class="btn">Next Chapter →</button>
+        </div>
+        <div class="hearts" aria-hidden="true"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/puzzle.js"></script>
+</body>
+</html>
