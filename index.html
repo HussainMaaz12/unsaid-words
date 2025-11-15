@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Unsaid Words</title>
   <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaQueue = window.vaQueue || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div class="container">
@@ -43,6 +49,9 @@
     });
 
     setInterval(createEmoji, 400);
+
+    // Track pageview with Vercel Analytics
+    window.va('pageview');
   </script>
 </body>
 </html>

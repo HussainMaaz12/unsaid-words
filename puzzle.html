@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Complete the Heart — Unsaid Words</title>
   <link rel="stylesheet" href="css/puzzle.css">
+  
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaQueue = window.vaQueue || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div class="page">
@@ -33,5 +39,10 @@
   </div>
 
   <script src="js/puzzle.js"></script>
+  
+  <script>
+    // Track pageview with Vercel Analytics
+    window.va('pageview');
+  </script>
 </body>
 </html>

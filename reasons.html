@@ -6,6 +6,12 @@
     <title>Why You're Special — Unsaid Words</title>
     <link rel="stylesheet" href="css/reasons.css">
     <link rel="icon" type="image/x-icon" href="assets/heart.ico">
+    
+    <!-- Vercel Analytics -->
+    <script>
+      window.va = window.va || function () { (window.vaQueue = window.vaQueue || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -26,5 +32,10 @@
     </div>
 
     <script src="js/reasons.js"></script>
+    
+    <script>
+      // Track pageview with Vercel Analytics
+      window.va('pageview');
+    </script>
 </body>
 </html>
