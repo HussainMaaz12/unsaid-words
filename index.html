@@ -41,13 +41,6 @@
       setTimeout(() => emoji.remove(), 7000);
     }
 
-    // Auto-scroll to content after animations
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 2500);
-    });
-
     setInterval(createEmoji, 400);
 
     // Track pageview with Vercel Analytics
