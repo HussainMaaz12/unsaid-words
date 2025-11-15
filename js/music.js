@@ -58,11 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- !!! NEW: ADD TIMESTAMPS HERE !!! ---
     // Find the start/end time in seconds (e.g., 1m 30s = 90)
     const playlist = [
+        { title: "I think They Call this Love", src: "assets/music/m4.mp3", start: 34, end: 64 },
         { title: "O Sathi", src: "assets/music/m2.mp3", start: 32, end: 95 },
         { title: "Chori Kiya Re ziya", src: "assets/music/m1.mp3", start: 100, end: 140 },
-        
-        { title: "I think They Call this Love", src: "assets/music/m4.mp3", start: 34, end: 64 },
-        
     ];
     // (You'll need to find the *exact* seconds you want)
 

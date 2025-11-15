@@ -105,11 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         current++;
         
-        // Auto-scroll to the newly added reason
-        setTimeout(() => {
-            reasonEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 300);
-        
         // Wait before showing the next one
         setTimeout(showNextReason, reasonDelay);
     }
