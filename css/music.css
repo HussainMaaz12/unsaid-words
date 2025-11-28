@@ -1,17 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap');
 
 :root {
-  --bg-glow: radial-gradient(ellipse at bottom, #ffd1dc 0%, #ffe5ec 70%, #fff0f5 100%);
+  /* --- Starry Night Theme Colors --- */
+  --bg1: #2b1029;   /* Deep Purple/Black */
+  --bg2: #4a192c;   /* Dark Berry */
   --accent: #ff4d6d;
-  --text-dark: #4a4650; 
-  --card-bg: rgba(255, 255, 255, 0.4);
-  --star-gold: #fecf4f;
+  --text-light: #fff0f5; 
+  --card-bg: rgba(255, 255, 255, 0.1); /* Glass effect for dark mode */
 }
 
 * { box-sizing: border-box; }
 
 html, body {
-  height: 100%;
+  height: 100%; 
   margin: 0;
   font-family: 'Poppins', sans-serif;
   display: flex;
@@ -19,427 +20,271 @@ html, body {
   align-items: center;
   padding: 40px 20px;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden; 
+  
+  /* Background */
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  color: var(--text-light);
+
+  /* Smooth Page Fade In */
+  opacity: 0;
+  animation: pageFadeIn 1.5s ease-out forwards;
 }
 
-body {
-  background: var(--bg-glow);
-}
+@keyframes pageFadeIn { to { opacity: 1; } }
 
-/* --- NEW: "EXTRA ORDINARY" GALAXY BACKGROUND --- */
-.starfield-container {
+/* --- Starfield & Floating Hearts --- */
+.starfield-container, .floating-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
-  z-index: 1; /* Below content */
+  z-index: 0; 
 }
 
-/* This is the new 4-point star shape */
 .star {
   position: absolute;
-  background-color: white;
-  opacity: 0;
-  /* clip-path creates the star shape */
-  clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
-  
-  /* The new animation: drift + twinkle */
-  animation: driftAndTwinkle linear infinite;
-}
-
-@keyframes driftAndTwinkle {
-  0% {
-    transform: translateY(-20vh) rotate(0deg); /* Start above screen */
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.8; /* Twinkle on */
-  }
-  80% {
-    opacity: 0.8; /* Twinkle off */
-  }
-  100% {
-    transform: translateY(120vh) rotate(360deg); /* End below screen */
-    opacity: 0;
-  }
-}
-
-/* NEW: The Shooting Star */
-.shooting-star {
-  position: fixed;
-  top: -50px; /* Start above screen */
-  left: 50%;
-  width: 2px; /* The "star" */
-  height: 2px;
-  background: #fff;
+  background: white;
   border-radius: 50%;
-  box-shadow: 0 0 8px 2px #fff, 0 0 12px 4px var(--star-gold);
-  
-  /* The "tail" */
-  transform-origin: top left;
-  animation: shoot 3s ease-in infinite;
+  opacity: 0.8;
+  animation: twinkle 3s infinite alternate;
 }
-.shooting-star::after {
-  content: '';
+
+.floating-heart {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 150px; /* Tail length */
-  height: 2px;
-  background: linear-gradient(to right, rgba(255,255,255,0.6), transparent);
-  transform: rotate(-30deg); /* Angle of the streak */
-  transform-origin: top left;
+  bottom: -50px;
+  font-size: 20px;
+  animation: floatUp linear forwards;
+  opacity: 0.6;
 }
 
-@keyframes shoot {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1; /* Appears */
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    /* Streaks across and fades */
-    transform: translate(100vw, 100vh) rotate(0deg);
-    opacity: 0;
-  }
-}
-/* --- End of New Background CSS --- */
+@keyframes twinkle { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+@keyframes floatUp { to { transform: translateY(-120vh); opacity: 0; } }
 
-
-/* --- Page Container --- */
+/* --- Page Container (UPDATED for Floating Effect) --- */
 .page {
-  /* ... (rest of your .page CSS is identical) ... */
   width: 100%;
   max-width: 500px;
-  padding: 40px 25px;
-  background: var(--card-bg);
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(255, 77, 109, 0.2);
-  backdrop-filter: blur(12px); 
   text-align: center;
   z-index: 10;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: pageFadeIn 1s ease-out 0.5s forwards;
-  overflow: hidden;
+  
+  /* --- NEW: Glass Card Style --- */
+  background: var(--card-bg);       /* Semi-transparent background */
+  backdrop-filter: blur(12px);      /* Blurs the stars behind it */
+  padding: 40px 30px;               /* Inner spacing */
+  border-radius: 25px;              /* Smooth rounded corners */
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3); /* Deep shadow to make it lift */
+  border: 1px solid rgba(255,255,255,0.1); /* Subtle white border */
 }
 
-@keyframes pageFadeIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Music Player (Identical) --- */
+/* --- Music Player & Visualizer --- */
 .music-player {
-  margin-bottom: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 20px;
-  flex-wrap: wrap;
-  width: 100%;
+  margin-bottom: 25px; /* Increased space below player */
 }
+
+/* Visualizer Bars */
+.visualizer {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 30px;
+}
+.visualizer.hidden { opacity: 0; transition: opacity 0.3s; }
+
+.bar {
+  width: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: equalizer 1s ease-in-out infinite;
+}
+.bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+.bar:nth-child(2) { height: 20px; animation-delay: 0.3s; }
+.bar:nth-child(3) { height: 15px; animation-delay: 0.5s; }
+
+@keyframes equalizer {
+  0%, 100% { height: 10px; }
+  50% { height: 25px; }
+}
+
+/* Buttons */
 .play-btn {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  border: 2px solid var(--accent);
-  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid white;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(5px);
   cursor: pointer;
   position: relative;
+  transition: transform 0.2s;
   box-shadow: 0 0 20px rgba(255, 77, 109, 0.3);
-  transition: all 0.3s ease;
-  animation: pulse 2s infinite ease-in-out;
 }
-.skip-btn {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease;
-}
-.play-btn:hover, .skip-btn:hover {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.7);
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
+.play-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
 
-/* --- Icons (Identical) --- */
+.skip-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.skip-btn:hover { opacity: 1; }
+
+/* Icons */
 .icon-play {
-  width: 0;
-  height: 0;
+  border-left: 18px solid white;
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
-  border-left: 18px solid var(--accent);
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-40%, -50%);
-  transition: opacity 0.2s ease;
+  top: 50%; left: 55%;
+  transform: translate(-50%, -50%);
 }
 .icon-pause {
-  width: 16px;
-  height: 18px;
+  width: 16px; height: 20px;
+  border-left: 5px solid white;
+  border-right: 5px solid white;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   opacity: 0;
-  transition: opacity 0.2s ease;
 }
-.icon-pause::before, .icon-pause::after {
-  content: '';
-  position: absolute;
-  width: 5px;
-  height: 18px;
-  background: var(--accent);
-  top: 0;
-}
-.icon-pause::before { left: 0; }
-.icon-pause::after { right: 0; }
-.icon-skip-prev, .icon-skip-next {
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.icon-skip-prev::before, .icon-skip-next::before {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-}
-.icon-skip-prev::after, .icon-skip-next::after {
-  content: '';
-  position: absolute;
-  width: 3px;
-  height: 12px;
-  background: var(--text-dark);
-}
-.icon-skip-prev::before { border-right: 9px solid var(--text-dark); left: 0; }
-.icon-skip-prev::after { right: 0; }
-.icon-skip-next::before { border-left: 9px solid var(--text-dark); right: 0; }
-.icon-skip-next::after { left: 0; }
 .playing .icon-play { opacity: 0; }
 .playing .icon-pause { opacity: 1; }
-.playing {
-  animation: none;
-  background: rgba(255, 255, 255, 0.8);
-}
 
-/* --- Memory Image --- */
-.memory-image {
-  width: 100%;
-  max-width: 350px;
-  height: auto;
-  border-radius: 15px;
-  margin: 20px 0 30px 0;
-  box-shadow: 0 8px 25px rgba(255, 77, 109, 0.15);
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.memory-image.show {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* --- Message Lines (Identical) --- */
 .song-title {
   font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 30px;
+  min-height: 20px;
+  color: var(--text-light);
   font-weight: 500;
-  color: var(--text-dark);
-  margin-top: 0;
-  margin-bottom: 25px;
-  height: 20px;
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  letter-spacing: 0.5px;
 }
-.message-container {
+
+/* --- Polaroid Frame --- */
+.polaroid-wrapper {
+  position: relative;
+  width: 260px; /* Slightly smaller to fit nicely in padding */
+  margin: 0 auto 30px;
   opacity: 0;
-  transition: opacity 0.5s ease 0.2s;
+  transform: translateY(20px) rotate(-2deg);
+  transition: all 1s ease;
 }
-.message-container.show {
+
+.polaroid-wrapper.show {
   opacity: 1;
+  transform: translateY(0) rotate(0deg);
+  animation: sway 6s ease-in-out infinite alternate 1s;
 }
+
+.polaroid {
+  background: white;
+  padding: 12px 12px 45px 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transform: rotate(-3deg);
+  border-radius: 2px;
+}
+
+.memory-image {
+  width: 100%;
+  display: block;
+  filter: sepia(20%);
+  transition: opacity 0.5s ease-in-out;
+}
+
+.pin {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  z-index: 10;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+
+@keyframes sway {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(3deg); }
+}
+
+/* --- Typewriter Text Styles --- */
+.message-container {
+  opacity: 1;
+  padding: 0 10px;
+}
+
 .line {
   font-family: 'Poppins', sans-serif;
   font-size: 1.1rem;
-  color: var(--text-dark);
-  margin: 15px 0;
+  color: var(--text-light);
+  margin: 8px 0;
+  min-height: 1.5em;
   opacity: 0;
-  transform: translateY(15px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition: opacity 0.5s ease;
 }
+
 h2.line {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--accent);
-  margin: 30px 0 10px;
+  margin-top: 30px;
+  text-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
 }
+
 h3.line {
   font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: var(--text-dark);
+  font-size: 1.2rem;
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0.9;
+  color: var(--text-light);
+  margin-top: 10px;
 }
-.line.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.line-1.show { transition-delay: 0.3s; }
-.line-2.show { transition-delay: 0.6s; }
-.line-3.show { transition-delay: 0.9s; }
-.line-4.show { transition-delay: 1.2s; }
-.line-5.show { transition-delay: 1.5s; }
-.line-6.show { transition-delay: 1.8s; }
-.line-7.show { transition-delay: 2.1s; }
-.line-8.show { transition-delay: 2.4s; }
-.line-9.show { transition-delay: 2.7s; }
-.line-10.show { transition-delay: 3s; }
-.line-11.show { transition-delay: 3.3s; }
-.line-12.show { transition-delay: 3.6s; }
-.line-13.show { transition-delay: 3.9s; }
-.line-14.show { transition-delay: 4.2s; }
-.line-15.show { transition-delay: 4.5s; }
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  html, body {
-    padding: 20px 10px;
-  }
+  html, body { padding: 20px 10px; }
   
   .page {
     max-width: 100%;
-    padding: 25px 15px;
-    border-radius: 15px;
+    padding: 30px 20px; /* Adjusted padding for mobile */
   }
   
-  .music-player {
-    gap: 15px;
-    margin-bottom: 15px;
-  }
+  .play-btn { width: 65px; height: 65px; }
+  .skip-btn { width: 45px; height: 45px; }
   
-  .play-btn {
-    width: 65px;
-    height: 65px;
-  }
+  .polaroid-wrapper { width: 220px; }
   
-  .skip-btn {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .icon-play {
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid var(--accent);
-    transform: translate(-35%, -50%);
-  }
-  
-  .memory-image {
-    max-width: 90%;
-    margin: 15px 0 20px 0;
-  }
-  
-  .line {
-    font-size: 1rem;
-    margin: 12px 0;
-  }
-  
-  h2.line {
-    font-size: 1.5rem;
-    margin: 20px 0 8px;
-  }
-  
-  h3.line {
-    font-size: 1.1rem;
-  }
+  h2.line { font-size: 1.5rem; }
+  h3.line { font-size: 1.1rem; }
 }
 
 @media (max-width: 480px) {
-  html, body {
-    padding: 15px 8px;
-  }
   
-  .page {
-    max-width: 100%;
-    padding: 20px 12px;
-    border-radius: 12px;
-  }
+  .music-player { gap: 10px; }
+  .page { padding: 25px 15px; }
   
-  .music-player {
-    gap: 12px;
-    margin-bottom: 12px;
-  }
+  .polaroid-wrapper { width: 200px; }
   
-  .play-btn {
-    width: 58px;
-    height: 58px;
-  }
-  
-  .skip-btn {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .icon-play {
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 13px solid var(--accent);
-    transform: translate(-35%, -50%);
-  }
-  
-  .icon-pause {
-    width: 14px;
-    height: 16px;
-  }
-  
-  .icon-pause::before, .icon-pause::after {
-    width: 4px;
-    height: 16px;
-  }
-  
-  .song-title {
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-  }
-  
-  .memory-image {
-    max-width: 95%;
-    margin: 12px 0 15px 0;
-  }
-  
-  .line {
-    font-size: 0.95rem;
-    margin: 10px 0;
-  }
-  
-  h2.line {
-    font-size: 1.3rem;
-    margin: 15px 0 8px;
-  }
-  
-  h3.line {
-    font-size: 1rem;
-  }
+  .line { font-size: 1rem; }
+  h2.line { font-size: 1.3rem; }
+  h3.line { font-size: 1rem; }
 }
 
+/* --- HIDE SCROLLBAR (But keep scrolling enabled) --- */
+
+/* For Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* For Firefox, IE, and Edge */
+html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

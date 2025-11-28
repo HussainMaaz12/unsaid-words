@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Unsaid Words</title>
     <link rel="stylesheet" href="css/music.css">
-    <link rel="icon" type="image/x-icon" href="assets/heart.ico">
     
-    <!-- Vercel Analytics -->
     <script>
       window.va = window.va || function () { (window.vaQueue = window.vaQueue || []).push(arguments); };
     </script>
@@ -15,10 +13,16 @@
 </head>
 <body>
     <div class="starfield-container" id="starfield-container"></div>
+    <div class="floating-container" id="floating-container"></div>
 
     <div class="page">
         
         <div class="music-player" id="music-player">
+            
+            <div class="visualizer hidden" id="vis-left">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+
             <button class="skip-btn" id="prev-btn" aria-label="Previous Song">
                 <div class="icon-skip-prev"></div>
             </button>
@@ -31,19 +35,27 @@
             <button class="skip-btn" id="next-btn" aria-label="Next Song">
                 <div class="icon-skip-next"></div>
             </button>
+
+            <div class="visualizer hidden" id="vis-right">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
         </div>
         
-        <p class="song-title" id="song-title"></p>
+        <p class="song-title" id="song-title">Select a song...</p>
         
-        <img class="memory-image" id="memory-image" src="assets/images/img1.jpeg" alt="Memory">
+        <div class="polaroid-wrapper">
+            <div class="pin">📌</div>
+            <div class="polaroid">
+                <img class="memory-image" id="memory-image" src="assets/images/img1.jpeg" alt="Memory">
+            </div>
+        </div>
         
         <div class="message-container" id="message-container">
-            <p class="line line-1">I wish I could undo some things…</p>
-            <p class="line line-2">But every mistake taught me how to understand you better.</p>
-            <p class="line line-3">Now I’m a better person — because of you.</p>
-            
-            <h2 class="line line-4">Thank you, Deepshikha 💫</h2>
-            <h3 class="line line-5">You’ll always be my unsaid words.</h3>
+            <p class="line line-1"></p>
+            <p class="line line-2"></p>
+            <p class="line line-3"></p>
+            <h2 class="line line-4"></h2>
+            <h3 class="line line-5"></h3>
         </div>
 
     </div>
@@ -53,7 +65,6 @@
     <script src="js/music.js"></script>
     
     <script>
-      // Track pageview with Vercel Analytics
       window.va('pageview');
     </script>
 </body>

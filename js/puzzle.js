@@ -2,21 +2,23 @@
 const boardEl = document.getElementById('board');
 const modal = document.getElementById('modal');
 const nextBtn = document.getElementById('nextBtn');
+const openBtn = document.getElementById('openBtn'); // NEW
+const envelopeView = document.getElementById('envelope-view'); // NEW
+const letterView = document.getElementById('letter-view'); // NEW
 const heartContainer = modal.querySelector('.hearts');
 const revealedTextEl = document.getElementById('revealedText');
 
 // --- Game State ---
-// "💖" = You (Deepshikha), "✨" = Me
 let board = [
   "💖", "✨", "💖",
   "✨", "", "✨",
   "💖", "✨", "💖"
 ];
-let winningIndex = 4; // She has to place 💖 in center
+let winningIndex = 4; 
 let winningMove = "💖";
 const winMessage = "Every word unspoken still whispers your name.";
 
-// --- Background Emojis (Starts Immediately) ---
+// --- Background Emojis ---
 const bgEmojis = ['💖', '🌸', '💫', '🩷', '💌', '✨'];
 
 function createFloatingEmoji() {
@@ -24,16 +26,16 @@ function createFloatingEmoji() {
   e.textContent = bgEmojis[Math.floor(Math.random() * bgEmojis.length)];
   e.style.position = 'fixed';
   e.style.left = Math.random() * 100 + 'vw';
-  e.style.top = '110vh'; // Start just below screen
+  e.style.top = '110vh'; 
   e.style.fontSize = (12 + Math.random() * 18) + 'px';
   e.style.opacity = 0.15 + Math.random() * 0.1;
   e.style.pointerEvents = 'none';
-  e.style.zIndex = 0; // Behind the page content
+  e.style.zIndex = 0; 
   e.style.transition = 'opacity 1s linear';
 
   document.body.appendChild(e);
 
-  const duration = 8000 + Math.random() * 5000; // 8-13s
+  const duration = 8000 + Math.random() * 5000; 
   const endLeft = (parseFloat(e.style.left) + (Math.random() * 40 - 20)) + 'vw';
 
   e.animate([
@@ -48,19 +50,16 @@ function createFloatingEmoji() {
   setTimeout(() => e.remove(), duration);
 }
 
-// Create a new floating emoji every 700ms
 setInterval(createFloatingEmoji, 700);
 
-
 // --- Board Logic ---
-
 function renderBoard() {
   boardEl.innerHTML = '';
   board.forEach((val, idx) => {
     const sq = document.createElement('div');
     sq.className = 'square';
     sq.dataset.idx = idx;
-    sq.dataset.value = val; // For CSS styling
+    sq.dataset.value = val; 
     sq.textContent = val;
     
     if (val === "") {
@@ -70,12 +69,10 @@ function renderBoard() {
     }
     
     sq.style.animationDelay = `${idx * 0.05}s`;
-    
     boardEl.appendChild(sq);
   });
 }
 
-// Handle clicking on a square
 function placeMove(idx) {
   if (idx !== winningIndex || board[idx] !== "") return;
 
@@ -86,59 +83,87 @@ function placeMove(idx) {
   sq.dataset.value = winningMove;
   sq.style.animation = 'stampIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
 
-  // --- NEW SPARKLE LOGIC ---
-  // 1. Play the sparkle animation
   playSparkleAnimation(sq);
-
-  // 2. Show the win modal *after* the animation
-  setTimeout(showWin, 700); // Delayed to let sparkles play
+  setTimeout(showWin, 700); 
 }
 
-// Shake a square if it's the wrong one
 function shakeSquare(sq) {
     if(!sq) return;
     sq.classList.add('shake');
     setTimeout(() => sq.classList.remove('shake'), 400);
 }
 
-// --- NEW: Function to play sparkle animation ---
 function playSparkleAnimation(squareElement) {
-  // Create 5 sparkles
   for (let i = 0; i < 5; i++) {
       const sparkle = document.createElement('div');
       sparkle.className = 'sparkle';
-      
-      // Position them randomly within the square
-      sparkle.style.top = (Math.random() * 80 + 10) + '%'; // 10% to 90%
-      sparkle.style.left = (Math.random() * 80 + 10) + '%'; // 10% to 90%
-      
-      // Add a random delay
+      sparkle.style.top = (Math.random() * 80 + 10) + '%'; 
+      sparkle.style.left = (Math.random() * 80 + 10) + '%'; 
       sparkle.style.animationDelay = (Math.random() * 0.3) + 's';
-      
       squareElement.appendChild(sparkle);
-      
-      // Remove the sparkle after animation
-      setTimeout(() => {
-          sparkle.remove();
-      }, 1000); // 0.7s animation + 0.3s max delay
+      setTimeout(() => sparkle.remove(), 1000); 
   }
 }
 
-// --- Win Modal Logic ---
-
+// --- Win Logic (Updated) ---
 function showWin() {
   modal.classList.add('show');
   modal.setAttribute('aria-hidden', 'false');
 
-  // Auto-scroll to the modal
+  // Ensure we start with the Envelope view
+  envelopeView.style.display = 'block';
+  letterView.style.display = 'none';
+
   setTimeout(() => {
     modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 300);
-
-  setInterval(createModalHeart, 400);
   
-  typewriter(revealedTextEl, winMessage);
+  setInterval(createModalHeart, 400);
 }
+
+// --- NEW: Open Mail Function ---
+openBtn.addEventListener('click', () => {
+    // 1. Hide Envelope
+    envelopeView.style.display = 'none';
+    
+    // 2. Show Letter with animation
+    letterView.style.display = 'block';
+    letterView.classList.add('fade-in-up'); // We will add this class in CSS
+
+    // 3. Trigger Confetti NOW (when mail opens)
+    triggerConfetti();
+
+    // 4. Start Typing the message
+    typewriter(revealedTextEl, winMessage);
+});
+
+
+function triggerConfetti() {
+  const duration = 3000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.6 },
+      colors: ['#ff4d6d', '#ffb3c1', '#f6c43c'] 
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.6 },
+      colors: ['#ff4d6d', '#ffb3c1', '#f6c43c']
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+}
+
 
 function createModalHeart() {
   const heart = document.createElement('div');
@@ -156,10 +181,12 @@ function typewriter(element, text, i = 0) {
     }
 }
 
-// --- Event Listeners ---
+// --- Navigation ---
 nextBtn.addEventListener('click', () => {
-  window.location.href = 'reasons.html';
+    document.body.classList.add('fade-out');
+    setTimeout(() => {
+        window.location.href = 'reasons.html';
+    }, 800);
 });
 
-// --- Initial Render ---
 renderBoard();

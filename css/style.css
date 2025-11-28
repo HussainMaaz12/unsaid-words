@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@500&display=swap');
 
+/* Prevent horizontal scroll across the site */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -14,6 +20,26 @@ body {
   align-items: center;
   overflow: hidden;
   font-family: 'Poppins', sans-serif;
+  
+  /* --- NEW: Page Transition Logic --- */
+  transition: opacity 0.8s ease-in-out;
+  opacity: 1; 
+}
+
+/* Class triggered by JS before navigation */
+body.fade-out {
+  opacity: 0;
+}
+
+.corner-decoration {
+  position: absolute;
+  width: 100px; /* <--- Change this number if the GIF is too big/small */
+  top: -65px;   /* <--- Adjust this if it's floating too high */
+  right: -35px; /* <--- Adjust this if it's too far right */
+  transform: rotate(15deg); 
+  z-index: 10;
+  pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .container {
@@ -53,9 +79,14 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
+  
+  /* --- NEW: Heartbeat Animation --- */
+  animation: heartbeat 3s infinite;
 }
 
 .start-btn:hover {
+  /* Pause animation on hover so the scale effect works smoothly */
+  animation: none;
   transform: scale(1.1);
   background: #ff4d6d;
 }
@@ -77,6 +108,8 @@ body {
   opacity: 0.9;
 }
 
+/* --- ANIMATIONS --- */
+
 @keyframes floatEmoji {
   0% {
     transform: translateY(100vh) rotate(0deg);
@@ -96,4 +129,13 @@ body {
 @keyframes textFade {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- NEW: Heartbeat Keyframes --- */
+@keyframes heartbeat {
+  0% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4); }
+  15% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 77, 109, 0.6); }
+  30% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4); }
+  45% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 77, 109, 0.6); }
+  100% { transform: scale(1); box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4); }
 }

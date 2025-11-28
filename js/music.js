@@ -1,93 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. "EXTRA ORDINARY" GALAXY GENERATOR ---
+    // --- 1. BACKGROUND MAGIC ---
     const starContainer = document.getElementById('starfield-container');
-    const numStars = 50; 
-    const colors = ['white', 'var(--accent)', 'var(--star-gold)'];
-
-    if (starContainer) {
-        // Create the drifting stars
-        for (let i = 0; i < numStars; i++) {
+    const floatContainer = document.getElementById('floating-container');
+    
+    function createStars() {
+        for (let i = 0; i < 60; i++) {
             const star = document.createElement('div');
             star.className = 'star';
-            
-            const size = Math.random() * 30+ 1; // 1px to 4px
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.top = (Math.random() * 100) + '%';
-            star.style.left = (Math.random() * 100) + '%';
-            star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            // NEW: Randomize duration and delay for parallax
-            star.style.animationDuration = (Math.random() * 10 + 10) + 's'; // 10-20s duration
-            star.style.animationDelay = (Math.random() * 10) + 's'; // 0-10s delay
-            
+            star.style.width = (Math.random() * 2 + 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.animationDuration = (Math.random() * 5 + 3) + 's';
+            star.style.animationDelay = (Math.random() * 5) + 's';
             starContainer.appendChild(star);
         }
-
-        // NEW: Function to create a shooting star
-        function createShootingStar() {
-            const shooter = document.createElement('div');
-            shooter.className = 'shooting-star';
-            
-            // Start from a random horizontal position
-            shooter.style.left = (Math.random() * 60 + 20) + 'vw'; // 20% to 80%
-            // Random delay for the animation
-            shooter.style.animationDelay = (Math.random() * 5 + 2) + 's'; // 2-7s delay
-            
-            starContainer.appendChild(shooter);
-            
-            // Remove after animation (3s) + max delay (7s)
-            setTimeout(() => {
-                shooter.remove();
-            }, 10000);
-        }
-
-        // Create a new shooting star every 7 seconds
-        setInterval(createShootingStar, 7000);
-        createShootingStar(); // Create one immediately
     }
 
-    // --- 2. Music Player Logic ---
+    function createFloatingHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerHTML = '💖'; 
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        floatContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 8000);
+    }
+
+    createStars();
+    setInterval(createFloatingHeart, 800);
+
+    // --- 2. MUSIC PLAYER & VISUALIZER ---
     const playBtn = document.getElementById('play-btn');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const audio = document.getElementById('bg-music');
     const songTitleEl = document.getElementById('song-title');
+    const visualizers = document.querySelectorAll('.visualizer');
     
-    // --- !!! NEW: ADD TIMESTAMPS HERE !!! ---
-    // Find the start/end time in seconds (e.g., 1m 30s = 90)
     const playlist = [
-        { title: "I think They Call this Love", src: "assets/music/m4.mp3", start: 34, end: 64 },
-        { title: "O Sathi", src: "assets/music/m2.mp3", start: 32, end: 95 },
-        { title: "Chori Kiya Re ziya", src: "assets/music/m1.mp3", start: 100, end: 140 },
+        { title: "I think They Call this Love", src: "assets/music/m4.mp3" },
+        { title: "O Sathi", src: "assets/music/m2.mp3" },
+        { title: "Chori Kiya Re ziya", src: "assets/music/m1.mp3" },
     ];
-    // (You'll need to find the *exact* seconds you want)
-
 
     let currentSongIndex = 0;
     let isPlaying = false;
     let hasStarted = false;
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
-    
     function loadSong(index) {
         audio.src = playlist[index].src;
         songTitleEl.textContent = playlist[index].title;
-
-        // --- NEW: Set start time when song loads ---
-        audio.onloadedmetadata = () => {
-            const currentSong = playlist[currentSongIndex];
-            // If a start time is defined, set it
-            if (currentSong.start) {
-                audio.currentTime = currentSong.start;
-            }
-        };
     }
 
     function playSong() {
@@ -95,106 +59,102 @@ document.addEventListener('DOMContentLoaded', () => {
         playBtn.classList.add('playing');
         audio.play();
         songTitleEl.style.opacity = 1;
+        // Turn on visualizer
+        visualizers.forEach(v => v.classList.remove('hidden'));
     }
 
     function pauseSong() {
         isPlaying = false;
         playBtn.classList.remove('playing');
         audio.pause();
-        songTitleEl.style.opacity = 0;
+        // Turn off visualizer
+        visualizers.forEach(v => v.classList.add('hidden'));
     }
 
-    function playNextSong() {
-        currentSongIndex = (currentSongIndex + 1) % playlist.length;
-        loadSong(currentSongIndex);
-        playSong();
-    }
-
-    function playPrevSong() {
-        currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
-        loadSong(currentSongIndex);
-        playSong();
-    }
-
-    // Event listener for the play button
     playBtn.addEventListener('click', () => {
         if (isPlaying) {
             pauseSong();
         } else {
             playSong();
-            
             if (!hasStarted) {
                 hasStarted = true;
-                revealMessage();
+                startRevealSequence();
             }
         }
     });
 
     nextBtn.addEventListener('click', () => {
-        playNextSong();
-        if (!hasStarted) {
-            hasStarted = true;
-            revealMessage();
-        }
+        currentSongIndex = (currentSongIndex + 1) % playlist.length;
+        loadSong(currentSongIndex);
+        if(isPlaying) playSong();
     });
-    
+
     prevBtn.addEventListener('click', () => {
-        playPrevSong();
-        if (!hasStarted) {
-            hasStarted = true;
-            revealMessage();
-        }
+        currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+        loadSong(currentSongIndex);
+        if(isPlaying) playSong();
     });
 
-    // When one song *naturally* ends (if no end time), play the next
-    audio.addEventListener('ended', playNextSong);
-
-    // --- NEW: Check timestamps as song plays ---
-    audio.addEventListener('timeupdate', () => {
-        const currentSong = playlist[currentSongIndex];
-        
-        // If an end time is set and we've passed it, play next song
-        if (currentSong.end && audio.currentTime >= currentSong.end) {
-            playNextSong();
-        }
-    });
-
-    // Load the first song
-    shuffle(playlist);
     loadSong(currentSongIndex);
 
+    // --- 3. MEMORY SLIDESHOW (NEW FEATURE) ---
+    // Make sure these filenames match exactly what you uploaded!
+    const memories = [
+        "assets/images/img1.jpeg",
+        "assets/images/img2.jpeg", // You added this
+        "assets/images/img3.jpeg"  // You added this
+    ];
+    
+    const memoryImgEl = document.getElementById('memory-image');
+    let currentMemoryIndex = 0;
 
-    // --- 3. Message Reveal Logic ---
-    const messageContainer = document.getElementById('message-container');
-    const memoryImage = document.getElementById('memory-image');
-    const lines = document.querySelectorAll('.line');
-
-    function revealMessage() {
-        if (messageContainer.classList.contains('show')) return; 
-
-        // Reveal image first
-        memoryImage.classList.add('show');
-        messageContainer.classList.add('show');
-
-        // Auto-scroll to the image/message
-        setTimeout(() => {
-            memoryImage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 300);
-
-        let delay = 500;
-        lines.forEach((line) => {
-            setTimeout(() => {
-                line.classList.add('show');
-            }, delay);
+    function startMemorySlideshow() {
+        setInterval(() => {
+            // Fade out
+            memoryImgEl.style.opacity = 0;
             
-            if (line.classList.contains('line-3')) {
-                delay += 2500;
-            } else if (line.classList.contains('line-4')) {
-                delay += 1500;
-            } else {
-                delay += 2000;
-            }
+            setTimeout(() => {
+                // Change image
+                currentMemoryIndex = (currentMemoryIndex + 1) % memories.length;
+                memoryImgEl.src = memories[currentMemoryIndex];
+                
+                // Fade in
+                memoryImgEl.style.opacity = 1;
+            }, 500); // Wait for fade out to finish
+            
+        }, 4000); // Change every 4 seconds
+    }
+
+    // --- 4. TYPEWRITER MESSAGE REVEAL ---
+    const lines = [
+        { el: document.querySelector('.line-1'), text: "I wish I could undo some things…" },
+        { el: document.querySelector('.line-2'), text: "But every mistake taught me how to value you." },
+        { el: document.querySelector('.line-3'), text: "Now I’m a better person — because of you." },
+        { el: document.querySelector('.line-4'), text: "Thank you, Deepshikha 💫" },
+        { el: document.querySelector('.line-5'), text: "You’ll always be my unsaid words." }
+    ];
+
+    function startRevealSequence() {
+        document.querySelector('.polaroid-wrapper').classList.add('show');
+        
+        // Start the slideshow when the photo appears
+        startMemorySlideshow();
+        
+        let delay = 1000; 
+        
+        lines.forEach((lineObj) => {
+            setTimeout(() => {
+                lineObj.el.style.opacity = 1;
+                typewriter(lineObj.el, lineObj.text);
+            }, delay);
+            delay += (lineObj.text.length * 50) + 1500;
         });
     }
 
+    function typewriter(element, text, i = 0) {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            setTimeout(() => typewriter(element, text, i + 1), 50);
+        }
+    }
 });

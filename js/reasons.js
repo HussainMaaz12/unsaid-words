@@ -1,128 +1,178 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- 1. PRO-LEVEL: Interactive Glow Aura ---
-    const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
-    document.body.appendChild(glow);
-
-    // Fade the glow in after page loads
-    setTimeout(() => {
-        glow.classList.add('glow-visible');
-    }, 500);
-
-    // Follows the mouse
-    document.addEventListener('mousemove', (e) => {
-        requestAnimationFrame(() => {
-            // We move the *center* of the glow to the cursor
-            glow.style.transform = `translate(${e.clientX - 150}px, ${e.clientY - 150}px)`;
-        });
-    });
-
-    // Follows touch on mobile
-    document.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) {
-            requestAnimationFrame(() => {
-                glow.style.transform = `translate(${e.touches[0].clientX - 150}px, ${e.touches[0].clientY - 150}px)`;
-            });
-        }
-    }, { passive: true });
-
-
-    // --- 2. PRO-LEVEL: Two-Part "Reveal" Logic ---
-    const reasonsContainer = document.getElementById('reasons-container');
-    const nextBtn = document.getElementById('nextBtn');
     
-    // Your reasons, now split into title and description
+    const stackContainer = document.getElementById('card-stack');
+    const nextBtn = document.getElementById('nextBtn');
+    const datingGif = document.getElementById('dating-gif'); // NEW: Reference to the GIF
+    const progressBar = document.getElementById('progress-bar');
+
+    // NEW: Background Container
+    const bgContainer = document.getElementById('floating-container');
+
+    // --- CONFIG: Cute Stickers for the cards ---
+    const stickers = [
+        "https://cdn-icons-gif.flaticon.com/11617/11617574.gif", // Cute Bear
+        "https://cdn-icons-gif.flaticon.com/19035/19035552.gif", // box of teady
+        "https://cdn-icons-gif.flaticon.com/11321/11321478.gif", // Heart
+        "https://cdn-icons-gif.flaticon.com/11706/11706636.gif", // Bunny
+        "https://cdn-icons-gif.flaticon.com/17904/17904507.gif"  // Flower
+    ];
+
     const reasons = [
         {
             title: "Your presence heals me",
             desc: "Even after everything, when we talk or laugh together, it feels like all the chaos in my mind fades, and I just feel at home with you."
         },
         {
-            title: "You challenge me in the best way",
-            desc: "Your teasing, playful sarcasm, and sometimes sharp words push me to be better, to think more, and to become stronger emotionally."
+            title: "You challenge me",
+            desc: "Your teasing, playful sarcasm, and sometimes sharp words push me to be better. You make me think and feel stronger."
         },
         {
             title: "You understand my silence",
-            desc: "I don’t have to explain everything; you somehow sense when I’m happy, tired, or hurting, and that connection is rare and precious."
+            desc: "I don’t have to explain everything; you somehow sense when I’m happy, tired, or hurting. That connection is rare."
         },
         {
-            title: "You bring light to my darkest days",
+            title: "You are my light",
             desc: "Even when I feel lost or low, a simple message or a small joke from you can change the entire mood of my day."
         },
         {
-            title: "Your laughter is unforgettable",
-            desc: "There’s something about the way you laugh that stays with me—it’s warm, genuine, and contagious, and I can’t help but smile whenever I hear it."
+            title: "Your laughter",
+            desc: "There’s something about the way you laugh that stays with me—it’s warm, genuine, and I can’t help but smile when I hear it."
         },
         {
-            title: "You've been patient with my flaws",
-            desc: "Through my moods, my mistakes, and my fears, you've stayed, proving that your care isn’t superficial—it’s real and deep."
+            title: "Your patience",
+            desc: "Through my moods, my mistakes, and my fears, you've stayed. You proved that your care isn’t superficial—it’s real."
         },
         {
-            title: "You make me believe in “us” again",
-            desc: "Despite past challenges and distance, the fact that we’re talking again makes me feel hope, excitement, and certainty that what we share is truly special."
+            title: "I believe in 'Us'",
+            desc: "Talking to you again makes me feel hope, excitement, and certainty that what we share is truly special."
         }
     ];
 
-    let current = 0;
-    // Longer delay to allow reading both parts
-    const reasonDelay = 3000; // 3 seconds
+    let totalCards = reasons.length;
+    let cardsRead = 0;
 
-    function showNextReason() {
-        if (current >= reasons.length) {
-            // All reasons shown, show the button
-            nextBtn.classList.add('show');
+    // --- NEW: Floating Background Logic ---
+    function initFloatingBackground() {
+        const icons = ['💖', '✨', '🌸', '☁️', '💌', '🩷'];
+        
+        setInterval(() => {
+            const el = document.createElement('div');
+            el.classList.add('floater');
+            el.textContent = icons[Math.floor(Math.random() * icons.length)];
+            
+            // Randomize position and speed
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            el.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5-10s duration
+            
+            bgContainer.appendChild(el);
+            
+            // Cleanup
+            setTimeout(() => el.remove(), 10000);
+        }, 600); // Create one every 600ms
+    }
+
+    // 1. Create Cards
+    function createCards() {
+        // Reverse so the first index is visually on top
+        [...reasons].reverse().forEach((reason, index) => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            
+            // Random Rotation for "messy stack" look
+            const randomRotate = Math.random() * 6 - 3; // -3 to +3 deg
+            card.style.transform = `translateX(-50%) rotate(${randomRotate}deg)`;
+            
+            // Random Sticker
+            const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
+
+            // UPDATED: Used 'heart2.gif' instead of emoji in card-icon
+            card.innerHTML = `
+                <img src="${randomSticker}" class="card-sticker" alt="sticker">
+                <img src="assets/images/heart2.gif" class="card-icon-gif" alt="❤️">
+                <h3>${reason.title}</h3>
+                <p>${reason.desc}</p>
+                <div class="click-hint">Tap to Next</div>
+            `;
+            
+            stackContainer.appendChild(card);
+        });
+
+        // After creating, activate the top one
+        updateInteraction();
+    }
+
+    // 2. The Robust "Activate Top Card" Logic (Preserved)
+    function updateInteraction() {
+        // Select all cards that haven't flown away yet
+        const remainingCards = document.querySelectorAll('.card:not(.fly-out)');
+        
+        if (remainingCards.length === 0) {
+            // No cards left? Show the final scene
+            showFinalScene();
             return;
         }
 
-        const reasonData = reasons[current];
+        // The last element in the DOM is visually on top
+        const topCard = remainingCards[remainingCards.length - 1];
         
-        // 1. Create the parent div
-        const reasonEl = document.createElement('div');
-        reasonEl.className = 'reason';
+        // Add the 'active' class (for Wiggle animation)
+        topCard.classList.add('active-card');
 
-        // 2. Create the title
-        const titleEl = document.createElement('p');
-        titleEl.className = 'reason-title';
-        titleEl.textContent = reasonData.title;
+        // Add Click Listener (One-time only)
+        topCard.addEventListener('click', () => {
+            // 1. Animate it away
+            animateCardAway(topCard);
+            
+            // 2. Update Progress
+            cardsRead++;
+            updateProgress();
 
-        // 3. Create the description
-        const descEl = document.createElement('p');
-        descEl.className = 'reason-desc';
-        descEl.textContent = reasonData.desc;
+            // 3. Prepare the NEXT card
+            updateInteraction();
 
-        // 4. Append them all
-        reasonEl.appendChild(titleEl);
-        reasonEl.appendChild(descEl);
-        reasonsContainer.appendChild(reasonEl);
-
-        // 5. Trigger the animation
-        // This tiny delay forces the browser to render the element *before*
-        // adding the class, allowing the transition to play.
-        setTimeout(() => {
-            reasonEl.classList.add('show');
-        }, 10); 
-
-        current++;
-        
-        // Wait before showing the next one
-        setTimeout(showNextReason, reasonDelay);
+        }, { once: true }); // Important: ensures it only clicks once
     }
 
-    // Start after a brief delay for page title to animate
-    setTimeout(showNextReason, 1200);
-
-    // Button navigation
-    nextBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Stop the link from firing immediately
+    function animateCardAway(card) {
+        card.classList.remove('active-card'); // Stop wiggling
+        card.classList.add('fly-out');
         
-        // Fade out the page
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = 0;
-        
-        // Go to the next page after the fade
+        // Remove from DOM after animation to keep things clean
         setTimeout(() => {
-            window.location.href = 'music.html'; // Go to Page 4
+            card.style.display = 'none';
+        }, 600);
+    }
+
+    function updateProgress() {
+        const percent = (cardsRead / totalCards) * 100;
+        progressBar.style.width = `${percent}%`;
+    }
+
+    // UPDATED: Show the Dating GIF first, then the button
+    function showFinalScene() {
+        setTimeout(() => {
+            // Show GIF
+            datingGif.classList.remove('hidden');
+            datingGif.classList.add('visible');
+            
+            // Show Button slightly after
+            setTimeout(() => {
+                nextBtn.classList.remove('hidden');
+                nextBtn.classList.add('visible');
+            }, 500);
         }, 500);
+    }
+
+    // 3. Navigation
+    nextBtn.addEventListener('click', () => {
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+            window.location.href = 'music.html';
+        }, 800);
     });
+
+    // Start
+    createCards();
+    initFloatingBackground();
 });
