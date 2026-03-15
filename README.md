@@ -1,64 +1,16 @@
-# Unsaid Words
+# React + Vite
 
-A frontend site for Unsaid Words - featuring static pages with animations and interactive content.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 📋 Features
+Currently, two official plugins are available:
 
-- **Home Page** - Main landing page
-- **Apology Page** - Apology content
-- **Reasons Page** - Reasons content  
-- **Music Page** - Music player and content
-- **Puzzle Page** - Interactive puzzle
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 🛠️ Tech Stack
+## React Compiler
 
-- HTML5
-- CSS3 (with animations)
-- Vanilla JavaScript
-- HTTP Server
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## 📦 Installation
+## Expanding the ESLint configuration
 
-```bash
-npm install
-```
-
-## 🚀 Running the Project
-
-```bash
-npm start
-```
-
-The project will be available at `http://localhost:3000`
-
-## 📁 Project Structure
-
-```
-├── index.html          # Home page
-├── apology.html        # Apology page
-├── reasons.html        # Reasons page
-├── music.html          # Music page
-├── puzzle.html         # Puzzle page
-├── css/                # Stylesheets
-│   ├── style.css
-│   ├── animation.css
-│   ├── music.css
-│   ├── puzzle.css
-│   └── reasons.css
-├── js/                 # JavaScript files
-│   ├── main.js
-│   ├── music.js
-│   ├── puzzle.js
-│   └── reasons.js
-└── assets/             # Images and music files
-    ├── images/
-    └── music/
-```
-
-## 📄 License
-
-MIT License
-
-## 👨‍💻 Author
-
-Created with ❤️
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

@@ -1,58 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unsaid Words</title>
-  <link rel="stylesheet" href="css/style.css" />
-  
-  <script>
-    window.va = window.va || function () { (window.vaQueue = window.vaQueue || []).push(arguments); };
-  </script>
-  <script defer src="/_vercel/insights/script.js"></script>
-</head>
-<body>
-  <div class="container">
-    <img src="assets/images/cat1.gif" alt="Cute Animated Cat" class="corner-decoration">
-
-    <h1 class="title">Hey Deepshikha 💖</h1>
-    <p class="subtitle">Before you go further... <br>🌙 Every click takes you closer to what I never said. <br>I just wanted to make you smile today.</p>
-    
-    <button class="start-btn" onclick="goToNext()">Click to Begin 💫</button>
-  </div>
-
-  <div class="emoji-container"></div>
-
-  <script>
-    function goToNext() {
-      document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = "puzzle.html";
-      }, 800);
-    }
-
-    const emojis = ["💖", "🌸", "🌙", "💫", "🩷"];
-    const container = document.querySelector('.emoji-container');
-
-    function createEmoji() {
-      const emoji = document.createElement('div');
-      emoji.classList.add('emoji');
-      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      emoji.style.left = Math.random() * 100 + 'vw';
-      emoji.style.fontSize = Math.random() * 24 + 20 + 'px';
-      emoji.style.animationDuration = (4 + Math.random() * 4) + 's';
-      container.appendChild(emoji);
-      setTimeout(() => emoji.remove(), 7000);
-    }
-
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.querySelector('.container').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 2500);
-    });
-
-    setInterval(createEmoji, 400);
-    window.va('pageview');
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>temp-app</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
